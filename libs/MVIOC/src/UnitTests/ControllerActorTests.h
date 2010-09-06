@@ -18,17 +18,37 @@
 
 #import <SenTestingKit/SenTestingKit.h>
 #import <UIKit/UIKit.h>
+#import "MVIOCControllerActor.h"
 
-#import "MVIOCSingletonCache.h"
+@class ControllerActorTestsView;
+@class ControllerActorTestsViewAnother;
 
-@interface IOCSingletonCacheTests : SenTestCase {
-    MVIOCSingletonCache *_cache;
+@interface ControllerActorTests : SenTestCase {
+    MVIOCControllerActor *_controllerActor;
+    UIView *_view;
 }
+
+@property(nonatomic, retain) MVIOCControllerActor *controllerActor;
+@property(nonatomic, retain) UIView *view;
 
 #if USE_APPLICATION_UNIT_TEST
 
 #else
 
 #endif
+
+@end
+
+@interface ControllerActorTestsView : UIView {
+    
+}
+
+@property(readonly) ControllerActorTests *owningController;
+
+@end
+
+@interface ControllerActorTestsViewAnother : UIView {
+    
+}
 
 @end

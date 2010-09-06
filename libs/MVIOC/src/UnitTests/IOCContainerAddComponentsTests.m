@@ -1,15 +1,24 @@
-//
-//  IOCContainerTests.m
-//  IOC
-//
-//  Created by Michal Vašíček on 7/17/10.
-//  Copyright 2010 __MyCompanyName__. All rights reserved.
-//
+// 
+// Copyright 2010 MICHAL VASICEK
+// 
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+// 
+// http://www.apache.org/licenses/LICENSE-2.0
+// 
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// 
 
 #import "IOCContainerAddComponentsTests.h"
-#import "MVIOCPropertyFactory.h"
+#import "MVIOCPropertyInjectionType.h"
 #import "MVIOCContainer.h"
 #import "MVIOCCache.h"
+#import "MVIOCActor.h"
 #import <OCMock/OCMock.h>
 #import "TestClasses.h"
 
@@ -56,24 +65,24 @@
 }
 
 - (void)testSetDefaultFactory {
-    id<MVIOCFactory> factory = [[[MVIOCPropertyFactory alloc] init] autorelease];
-    [self.container setFactory:factory];
+    id<MVIOCInjectionType> factory = [[[MVIOCPropertyInjectionType alloc] init] autorelease];
+    [self.container setInjectionType:factory];
 }
 
 - (void)testAddComponentWithCustomFactory {
-    id defaultFactory = [OCMockObject niceMockForProtocol:@protocol(MVIOCFactory)];
-    [self.container setFactory:defaultFactory];
-    id forComponentFactory = [OCMockObject niceMockForProtocol:@protocol(MVIOCFactory)];
+    id defaultFactory = [OCMockObject niceMockForProtocol:@protocol(MVIOCInjectionType)];
+    [self.container setInjectionType:defaultFactory];
+    id forComponentFactory = [OCMockObject niceMockForProtocol:@protocol(MVIOCInjectionType)];
     
-    [[self.container withFactory:forComponentFactory] addComponent:[IOCContainerAddComponentsTests class]];
-    [self.container addComponent:[MVIOCPropertyFactory class]];
+    [[self.container withInjectionType:forComponentFactory] addComponent:[IOCContainerAddComponentsTests class]];
+    [self.container addComponent:[MVIOCPropertyInjectionType class]];
     
-    [[forComponentFactory expect] createInstanceFor:[IOCContainerAddComponentsTests class]];
+    [[forComponentFactory expect] createInstanceFor:[IOCContainerAddComponentsTests class] withDeps:nil initSelector:nil initParams:nil];
     [self.container getComponent:[IOCContainerAddComponentsTests class]];
     [forComponentFactory verify];
     
-    [[defaultFactory expect] createInstanceFor:[MVIOCPropertyFactory class]];
-    [self.container getComponent:[MVIOCPropertyFactory class]];
+    [[defaultFactory expect] createInstanceFor:[MVIOCPropertyInjectionType class] withDeps:nil initSelector:nil initParams:nil];
+    [self.container getComponent:[MVIOCPropertyInjectionType class]];
     [defaultFactory verify];
 }
 
@@ -92,9 +101,9 @@
                                                      reason:@"Factory should not be called when object is cached"
                                                    userInfo:nil];
     
-    id factory = [OCMockObject niceMockForProtocol:@protocol(MVIOCFactory)];
-    [[[factory stub] andThrow:exception] createInstanceFor:[IOCContainerAddComponentsTests class]];
-    [self.container setFactory:factory];
+    id factory = [OCMockObject niceMockForProtocol:@protocol(MVIOCInjectionType)];
+    [[[factory stub] andThrow:exception] createInstanceFor:[IOCContainerAddComponentsTests class] withDeps:nil initSelector:nil initParams:nil];
+    [self.container setInjectionType:factory];
     
     id cache = [OCMockObject niceMockForProtocol:@protocol(MVIOCCache)];
     [[[cache stub] andReturn:self] getInstanceWithKey:@"IOCContainerAddComponentsTests"];
@@ -105,9 +114,13 @@
 }
 
 - (void)testAddComponentWithExplicitDepsInVarg {
-    id factory = [OCMockObject niceMockForProtocol:@protocol(MVIOCFactory)];
-    [[factory expect] createInstanceFor:[MVTestProtocolCompositor class] withDeps:[OCMArg checkWithSelector:@selector(hasFactoryGetDepArgumentAsArray:) onObject:self]];
-    [self.container setFactory:factory];
+    id factory = [OCMockObject niceMockForProtocol:@protocol(MVIOCInjectionType)];
+    [[factory expect] createInstanceFor:[MVTestProtocolCompositor class]
+                               withDeps:[OCMArg checkWithSelector:@selector(hasFactoryGetDepArgumentAsArray:) onObject:self]
+                           initSelector:nil
+                             initParams:nil];
+    
+    [self.container setInjectionType:factory];
     [[self.container withDeps:[MVTestProtocolImplementation class], nil] addComponent:[MVTestProtocolCompositor class]];
     [self.container getComponent:[MVTestProtocolCompositor class]];
     [factory verify];
@@ -123,10 +136,13 @@
 }
 
 - (void)testAddComponentWithExplicitDepsInDictionary {
-    id factory = [OCMockObject niceMockForProtocol:@protocol(MVIOCFactory)];
-    [[factory expect] createInstanceFor:[MVTestProtocolCompositor class] withDeps:[OCMArg checkWithSelector:@selector(hasFactoryGetDepArgumentAsDictionary:) onObject:self]];
+    id factory = [OCMockObject niceMockForProtocol:@protocol(MVIOCInjectionType)];
+    [[factory expect] createInstanceFor:[MVTestProtocolCompositor class]
+                               withDeps:[OCMArg checkWithSelector:@selector(hasFactoryGetDepArgumentAsDictionary:) onObject:self] 
+                           initSelector:nil
+                             initParams:nil];
     
-    [self.container setFactory:factory];
+    [self.container setInjectionType:factory];
     
     NSDictionary *deps = [NSDictionary dictionaryWithObjectsAndKeys:[MVTestProtocolImplementation class], @"composite", nil];
     
@@ -152,6 +168,42 @@
     [[self.container withCache] addComponent:[IOCContainerAddComponentsTests class]];
     id instance = [self.container getComponent:@"IOCContainerAddComponentsTests"];
     STAssertTrue(instance == self, @"Bad component");
+}
+
+- (void)testAddComponentClassWithCustomInit {
+    id factory = [OCMockObject niceMockForProtocol:@protocol(MVIOCInjectionType)];
+    [[factory expect] createInstanceFor:[MVTestCustomInitClass class]
+                               withDeps:nil
+                           initSelector:@selector(initWithObject:)
+                             initParams:[OCMArg checkWithSelector:@selector(checkInitWithCustomSelectorParams:) onObject:self]];
+    
+    self.container.injectionType = factory;
+    [[self.container withInitSelector:@selector(initWithObject:) params:self, self, nil] addComponent:[MVTestCustomInitClass class]];
+    [self.container getComponent:[MVTestCustomInitClass class]];
+    [factory verify];
+}
+
+- (BOOL)checkInitWithCustomSelectorParams:(NSArray *)params {
+    if ([params count] == 2) {
+        return YES;
+    }
+    return NO;
+}
+
+- (void)testAddComponentWithActAs {
+    id actor = [OCMockObject mockForProtocol:@protocol(MVIOCActor)];
+    [[actor expect] makeActOnInstance:[OCMArg checkWithSelector:@selector(checkCallActorMakeActOnInstance:) onObject:self]];
+    [[self.container actAs:actor] addComponent:[IOCContainerAddComponentsTests class]];
+    [self.container getComponent:[IOCContainerAddComponentsTests class]];
+    
+    [actor verify];
+}
+
+- (BOOL)checkCallActorMakeActOnInstance:(id)instance {
+    if ([instance isKindOfClass:[IOCContainerAddComponentsTests class]]) {
+        return YES;
+    }
+    return NO;
 }
 
 #endif

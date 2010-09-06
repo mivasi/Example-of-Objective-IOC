@@ -12,6 +12,7 @@
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
 		288765FD0DF74451002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765FC0DF74451002DB57D /* CoreGraphics.framework */; };
+		6C6C82B61233DF1B0014FEAB /* CustomView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C6C82B51233DF1B0014FEAB /* CustomView.m */; };
 		6CAF8DE61212EF4C009B0AA4 /* SomeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CAF8DE51212EF4C009B0AA4 /* SomeController.m */; };
 		6CAF8E7B1212F469009B0AA4 /* SomeService.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CAF8E7A1212F469009B0AA4 /* SomeService.m */; };
 		6CC004941212F6CB00D29D3D /* libIOC.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6CC004931212F6C300D29D3D /* libIOC.a */; };
@@ -22,21 +23,21 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 6CC004881212F6C300D29D3D /* IOC.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 6C1D739511F21E8400F0EFC2 /* UnitTests.octest */;
+			remoteGlobalIDString = 6C1D739511F21E8400F0EFC2;
 			remoteInfo = UnitTests;
 		};
 		6CC004921212F6C300D29D3D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 6CC004881212F6C300D29D3D /* IOC.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 6C07A88211FEDDCA00358364 /* libIOC.a */;
+			remoteGlobalIDString = 6C07A88211FEDDCA00358364;
 			remoteInfo = IOC;
 		};
 		6CC004951212F6EB00D29D3D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 6CC004881212F6C300D29D3D /* IOC.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 6C07A88111FEDDCA00358364 /* IOC */;
+			remoteGlobalIDString = 6C07A88111FEDDCA00358364;
 			remoteInfo = IOC;
 		};
 /* End PBXContainerItemProxy section */
@@ -50,6 +51,8 @@
 		288765FC0DF74451002DB57D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* IOCExample_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOCExample_Prefix.pch; sourceTree = "<group>"; };
+		6C6C82B41233DF1B0014FEAB /* CustomView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomView.h; sourceTree = "<group>"; };
+		6C6C82B51233DF1B0014FEAB /* CustomView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomView.m; sourceTree = "<group>"; };
 		6CAF8DE41212EF4C009B0AA4 /* SomeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SomeController.h; sourceTree = "<group>"; };
 		6CAF8DE51212EF4C009B0AA4 /* SomeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SomeController.m; sourceTree = "<group>"; };
 		6CAF8E791212F469009B0AA4 /* SomeService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SomeService.h; sourceTree = "<group>"; };
@@ -82,6 +85,8 @@
 				6CAF8DE51212EF4C009B0AA4 /* SomeController.m */,
 				6CAF8E791212F469009B0AA4 /* SomeService.h */,
 				6CAF8E7A1212F469009B0AA4 /* SomeService.m */,
+				6C6C82B41233DF1B0014FEAB /* CustomView.h */,
+				6C6C82B51233DF1B0014FEAB /* CustomView.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -223,6 +228,7 @@
 				1D3623260D0F684500981E51 /* IOCExampleAppDelegate.m in Sources */,
 				6CAF8DE61212EF4C009B0AA4 /* SomeController.m in Sources */,
 				6CAF8E7B1212F469009B0AA4 /* SomeService.m in Sources */,
+				6C6C82B61233DF1B0014FEAB /* CustomView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

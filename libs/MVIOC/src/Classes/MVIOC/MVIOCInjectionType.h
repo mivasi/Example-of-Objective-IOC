@@ -14,21 +14,14 @@
 // limitations under the License.
 // 
 
-#define USE_APPLICATION_UNIT_TEST 0
-
-#import <SenTestingKit/SenTestingKit.h>
 #import <UIKit/UIKit.h>
+#import "MVIOCContainer.h"
 
-#import "MVIOCSingletonCache.h"
+@protocol MVIOCInjectionType <NSObject>
 
-@interface IOCSingletonCacheTests : SenTestCase {
-    MVIOCSingletonCache *_cache;
-}
+- (id)createInstanceFor:(Class)clazz withDeps:(id)deps initSelector:(SEL)initSelector initParams:(NSArray*)initParams;
 
-#if USE_APPLICATION_UNIT_TEST
-
-#else
-
-#endif
+@optional
+- (void)setContainer:(MVIOCContainer *)container;
 
 @end

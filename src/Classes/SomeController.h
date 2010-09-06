@@ -10,6 +10,7 @@
 
 @class IOCExampleAppDelegate;
 @class SomeService;
+@class CustomView;
 
 @interface SomeController : UIViewController {
     UIWindow *injWindow;
@@ -20,5 +21,6 @@
 @property (nonatomic, assign) UIWindow *window;
 @property (nonatomic, assign) IOCExampleAppDelegate *appDelegate;
 @property (nonatomic, retain) SomeService *service;
+@property (readonly) NSString *controllerInfo;
 
 @end

@@ -26,10 +26,10 @@
     self.container = [[MVIOCContainer alloc] init];
     [self.container addComponent:self];
     [self.container addComponent:self.window];
-	[self.container addComponent:[SomeController class]];
+	[[self.container actAs:[[[MVIOCControllerActor alloc] init] autorelease]] addComponent:[SomeController class]];
     
     [self.container addComponent:[SomeService class]];
-    
+        
     UIViewController *mainController = (UIViewController*)[self.container getComponent:[SomeController class]];
     
     [self.window addSubview:mainController.view];

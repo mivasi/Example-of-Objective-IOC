@@ -1,0 +1,14 @@
+<h2>Controller actor</h2>
+<p>This feature is used for those who not use 'Inteface Builder' to create their views. It's solving problem, when you have many views and subviews, and some of your deep subview need referece of owner controller.
+In short, controller reference for every view. Let's have some view <br/>
+<pre><code>
+//SomeView.h
+@interface SomeView : UIView { 
+}
+@property(readonly) ControllerActorTests *owningController;
+@end
+
+//SomeView.m
+
+</code></pre>
+</p>

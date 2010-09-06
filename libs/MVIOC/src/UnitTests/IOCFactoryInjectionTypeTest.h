@@ -18,17 +18,21 @@
 
 #import <SenTestingKit/SenTestingKit.h>
 #import <UIKit/UIKit.h>
+#import "MVIOCFactoryInjectionType.h"
 
-#import "MVIOCSingletonCache.h"
 
-@interface IOCSingletonCacheTests : SenTestCase {
-    MVIOCSingletonCache *_cache;
+@interface IOCFactoryInjectionTypeTest : SenTestCase {
+    MVIOCFactoryInjectionType *_injectionType;
 }
+
+@property(nonatomic, retain) MVIOCFactoryInjectionType *injectionType;
 
 #if USE_APPLICATION_UNIT_TEST
 
 #else
 
 #endif
+
+- (id)createInstance;
 
 @end

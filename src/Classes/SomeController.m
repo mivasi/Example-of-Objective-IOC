@@ -9,6 +9,7 @@
 #import "SomeController.h"
 #import "IOCExampleAppDelegate.h"
 #import "SomeService.h"
+#import "CustomView.h"
 
 @implementation SomeController
 
@@ -17,21 +18,22 @@
 @synthesize service = injService;
 
 - (void)loadView {
-    self.view = [[[UIView alloc] initWithFrame:self.window.bounds] autorelease];
+    CustomView *view = [[[CustomView alloc] initWithFrame:[self.window bounds]] autorelease];
+    self.view = view;
+    [view showControllerInfo];
 }
 
 - (void)viewDidLoad {
-    UILabel *label = [[[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 100)] autorelease];
-    label.text = self.appDelegate.sharedText;
-    [self.view addSubview:label];
-    self.view.backgroundColor = [UIColor whiteColor];
-    
     NSLog(@"%@", [self.service doService]);
 }
 
 - (void)dealloc {
     self.service = nil;
     [super dealloc];
+}
+
+- (NSString *)controllerInfo {
+    return @"SomeController by Michal";
 }
 
 @end

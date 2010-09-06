@@ -1,23 +1,31 @@
-//
-//  IOCContainerAddLazyComponent.m
-//  IOC
-//
-//  Created by Michal Vašíček on 7/27/10.
-//  Copyright 2010 __MyCompanyName__. All rights reserved.
-//
+// 
+// Copyright 2010 MICHAL VASICEK
+// 
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+// 
+// http://www.apache.org/licenses/LICENSE-2.0
+// 
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// 
 
-#import "IOCPropertyFactoryTests.h"
+#import "IOCPropertyInjectionTypeTests.h"
 #import <OCMock/OCMock.h>
 #import "TestClasses.h"
 
 #import <objc/runtime.h>
 
-@implementation IOCPropertyFactoryTests
+@implementation IOCPropertyInjectionTypeTests
 
 @synthesize factory = _factory;
 
 - (void)setUp {
-    self.factory = [[[MVIOCPropertyFactory alloc] init] autorelease];
+    self.factory = [[[MVIOCPropertyInjectionType alloc] init] autorelease];
 }
 
 - (void)tearDown {
@@ -35,7 +43,7 @@
                                                    userInfo:nil];
     [[[container stub] andThrow:exception] getComponent:[OCMArg any]];
     [self.factory setContainer:container];
-    [self.factory createInstanceFor:[MVTestLazyCompositor class]];
+    [self.factory createInstanceFor:[MVTestLazyCompositor class] withDeps:nil initSelector:nil initParams:nil];
 }
 
 - (void)testGetComponentAfterQueryingIt {
@@ -43,7 +51,7 @@
     [[container expect] getComponent:@"MVTestComposite"];
     
     [self.factory setContainer:container];
-    MVTestLazyCompositor *lazyCompositor = [self.factory createInstanceFor:[MVTestLazyCompositor class]];
+    MVTestLazyCompositor *lazyCompositor = [self.factory createInstanceFor:[MVTestLazyCompositor class] withDeps:nil initSelector:nil initParams:nil];
     lazyCompositor.composite;
     [container verify];
 }
@@ -56,7 +64,7 @@
                                                      reason:@"Get component should be called just for first time, when accessing to lazy loaded component"
                                                    userInfo:nil];
     
-    MVTestLazyCompositor *lazyCompositor = [self.factory createInstanceFor:[MVTestLazyCompositor class]];
+    MVTestLazyCompositor *lazyCompositor = [self.factory createInstanceFor:[MVTestLazyCompositor class] withDeps:nil initSelector:nil initParams:nil];
     [[[container stub] andReturn:self] getComponent:@"MVTestComposite"];
     lazyCompositor.composite;
     
@@ -78,9 +86,18 @@
                                   [MVTestProtocolImplementation class], @"manualComposite", 
                                   [MVTestComposite class], @"composite", nil];
     
-    MVTestCompositor *component = [self.factory createInstanceFor:[MVTestCompositor class] withDeps:explicitDeps];
+    MVTestCompositor *component = [self.factory createInstanceFor:[MVTestCompositor class] withDeps:explicitDeps initSelector:nil initParams:nil];
     component.lazyComposite;
     [container verify];    
+}
+
+- (void)testCreateComponentWithCustomInit {
+    id container = [OCMockObject niceMockForClass:[MVIOCContainer class]];
+    [[[container stub] andReturn:[MVTestCustomInitClass class]] getComponent:[OCMArg any]];
+    NSArray *params = [NSArray arrayWithObjects:@"NibFile", nil];
+    [self.factory setContainer:container];
+    MVTestCustomInitClass *instance = [self.factory createInstanceFor:[MVTestCustomInitClass class] withDeps:nil initSelector:@selector(initWithObject:) initParams:params];
+    STAssertTrue([instance.object isEqual:@"NibFile"], @"Init take bad argument");
 }
 
 #endif

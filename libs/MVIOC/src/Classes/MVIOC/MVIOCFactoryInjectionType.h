@@ -14,21 +14,20 @@
 // limitations under the License.
 // 
 
-#define USE_APPLICATION_UNIT_TEST 0
+#import <Foundation/Foundation.h>
+#import "MVIOCInjectionType.h"
 
-#import <SenTestingKit/SenTestingKit.h>
-#import <UIKit/UIKit.h>
+#define MVIOCFactoryInjectionTypeDefault [[[MVIOCFactoryInjectionType alloc] initWithFactoryInjectionType:[[[MVIOCPropertyInjectionType alloc] init] autorelease]] autorelease]
 
-#import "MVIOCSingletonCache.h"
+@class MVIOCInjectionType;
 
-@interface IOCSingletonCacheTests : SenTestCase {
-    MVIOCSingletonCache *_cache;
+@interface MVIOCFactoryInjectionType : NSObject <MVIOCInjectionType> {
+    id<MVIOCInjectionType> _factoryInjectionType;
+    MVIOCContainer *_container;
 }
 
-#if USE_APPLICATION_UNIT_TEST
+@property(nonatomic, retain) id<MVIOCInjectionType> factoryInjectionType;
 
-#else
-
-#endif
+- (id)initWithFactoryInjectionType:(id<MVIOCInjectionType>)injectionType;
 
 @end
